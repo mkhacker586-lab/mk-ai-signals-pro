@@ -18,135 +18,137 @@ def send_telegram_alert(msg):
     except Exception as e:
         print("Telegram Alert Error:", e)
 
-HTML_PAGE = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 𝗠.𝗞 𝗔𝗜 𝗦𝗜𝗚𝗡𝗔𝗟𝗦 𝗣𝗥𝗢 🚀</title>
-    <style>
-        body, html { background: transparent !important; margin: 0; padding: 0; overflow: hidden; font-family: sans-serif; height: 100%; width: 100%; }
+JS_PAYLOAD = """
+(function() {
+    if(document.getElementById('mk-master-panel')) {
+        document.getElementById('mk-master-panel').remove();
+        if(document.getElementById('mk-floating-mini-icon')) document.getElementById('mk-floating-mini-icon').remove();
+        if(document.getElementById('mk-injected-style')) document.getElementById('mk-injected-style').remove();
+    }
+
+    const style = document.createElement('style');
+    style.id = 'mk-injected-style';
+    style.innerHTML = `
         #mk-master-panel {
-            position: fixed; top: 10%; left: 15px; width: 315px; height: 480px;
-            background: #06090f !important; border-radius: 16px;
-            z-index: 2147483647 !important; color: #fff; font-family: sans-serif;
-            box-sizing: border-box; border: 3px solid #00f0ff; overflow-y: auto; overflow-x: hidden;
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
-            animation: mkGlowPulse 3s infinite alternate;
+            position: fixed !important; top: 10% !important; left: 15px !important; width: 320px !important; height: auto !important; max-height: 85vh !important;
+            background: #06090f !important; border-radius: 18px !important;
+            z-index: 2147483647 !important; color: #fff !important; font-family: sans-serif !important;
+            box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow-y: auto !important; overflow-x: hidden !important;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important; touch-action: none !important;
         }
         #mk-master-panel::-webkit-scrollbar { width: 4px; }
         #mk-master-panel::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 4px; }
         
-        @keyframes mkGlowPulse {
-            0% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
-            100% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.8); }
-        }
         #mk-panel-header {
-            background: linear-gradient(90deg, #ff0055, #7000ff, #00f0ff);
-            padding: 10px 12px; font-weight: bold; font-size: 12px;
-            text-align: center; position: sticky; top: 0; z-index: 10;
-            display: flex; justify-content: space-between; align-items: center;
-            user-select: none;
+            background: linear-gradient(90deg, #ff0055, #7000ff, #00f0ff) !important;
+            padding: 12px 14px !important; font-weight: bold !important; font-size: 13px !important;
+            text-align: center !important; cursor: move !important; display: flex !important; justify-content: space-between !important; align-items: center !important;
+            user-select: none !important; position: sticky !important; top: 0 !important; z-index: 10 !important;
         }
-        .mk-screen { padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; width: 100%; }
-        .mk-sec-title { font-size: 13px; font-weight: bold; color: #ff0055; text-align: center; text-shadow: 0 0 8px rgba(255,0,85,0.7); }
-        .mk-sec-subtitle { font-size: 10.5px; color: #94a3b8; text-align: center; line-height: 1.3; }
-        #mk-key-input { width: 100%; padding: 10px; background: #000; border: 2px solid #1e293b; border-radius: 6px; color: #fff; text-align: center; font-weight: bold; outline: none; box-sizing: border-box; font-size: 12px; }
-        .mk-link-btn { width: 100%; padding: 10px; background: #1e1b4b; color: #a855f7; border: 1px solid #4c1d95; font-weight: bold; border-radius: 6px; text-align: center; text-decoration: none; display: block; box-sizing: border-box; font-size: 11px; }
-        #mk-radar-status { text-align: center; color: #eab308; font-size: 11px; font-weight: bold; }
-        #mk-signal-box { background: #0f172a; padding: 14px; border-radius: 10px; text-align: center; border: 1px solid #1e293b; box-sizing: border-box; min-height: 80px; display: flex; flex-direction: column; justify-content: center; }
-        #mk-main-signal { font-size: 20px; font-weight: 900; color: #fff; width: 100%; padding: 6px 0; border-radius: 6px; }
-        #mk-timer-countdown { font-size: 11px; color: #94a3b8; margin-top: 5px; font-weight: bold; }
-        #mk-filter-text { text-align: center; color: #10b981; font-size: 11px; font-weight: bold; }
-        #mk-accuracy-wrapper { text-align: center; color: #e2e8f0; font-size: 11.5px; font-weight: bold; }
-        #mk-accuracy-value { color: #06b6d4; font-weight: 900; text-shadow: 0 0 8px #06b6d4; }
-        .mk-control-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
-        .mk-control-row select { background: #000; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 5px; width: 125px; outline: none; font-weight: bold; }
-        .mk-control-row input[type="color"] { border: none; background: transparent; width: 24px; height: 24px; cursor: pointer; }
-        .mk-theme-btn { background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 6px; padding: 6px; font-size: 9.5px; cursor: pointer; text-align: center; font-weight: bold; }
-        .mk-theme-btn:hover { background: #00f0ff; color: #000; border-color: #00f0ff; }
-        #mk-minimize-btn { width: 100%; background: transparent; border: 1px dashed #334155; color: #94a3b8; font-size: 10px; font-weight: bold; padding: 7px; border-radius: 6px; cursor: pointer; }
-        
-        .mk-signal-up-active { background: linear-gradient(135deg, #00ff66, #00b347) !important; color: #000 !important; box-shadow: 0 0 25px #00ff66 !important; font-size: 22px !important; font-weight: 900 !important; }
-        .mk-signal-down-active { background: linear-gradient(135deg, #ff0055, #b3003b) !important; color: #fff !important; box-shadow: 0 0 25px #ff0055 !important; font-size: 22px !important; font-weight: 900 !important; }
-        .mk-signal-win-frame { background: rgba(0, 255, 102, 0.25) !important; color: #00ff66 !important; border: 2px dashed #00ff66 !important; font-size: 20px !important; font-weight: 900 !important; }
-        .mk-signal-loss-frame { background: rgba(255, 0, 85, 0.25) !important; color: #ff0055 !important; border: 2px dashed #ff0055 !important; font-size: 20px !important; font-weight: 900 !important; }
-    </style>
-</head>
-<body>
+        .mk-screen { padding: 16px !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 12px !important; width: 100% !important; }
+        .mk-sec-title { font-size: 14px !important; font-weight: bold !important; color: #ff0055 !important; text-align: center !important; text-shadow: 0 0 8px rgba(255,0,85,0.7) !important; }
+        .mk-sec-subtitle { font-size: 11px !important; color: #94a3b8 !important; text-align: center !important; line-height: 1.4 !important; }
+        #mk-key-input { width: 100% !important; padding: 11px !important; background: #000 !important; border: 2px solid #1e293b !important; border-radius: 8px !important; color: #fff !important; text-align: center !important; font-weight: bold !important; outline: none !important; box-sizing: border-box !important; font-size: 13px !important; }
+        .mk-link-btn { width: 100% !important; padding: 11px !important; background: #1e1b4b !important; color: #a855f7 !important; border: 1px solid #4c1d95 !important; font-weight: bold !important; border-radius: 8px !important; text-align: center !important; text-decoration: none !important; display: block !important; box-sizing: border-box !important; font-size: 11.5px !important; }
+        #mk-radar-status { text-align: center !important; color: #eab308 !important; font-size: 11.5px !important; font-weight: bold !important; }
+        #mk-signal-box { background: #0f172a !important; padding: 18px !important; border-radius: 12px !important; text-align: center !important; border: 1px solid #1e293b !important; box-sizing: border-box !important; min-height: 90px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+        #mk-main-signal { font-size: 22px !important; font-weight: 900 !important; color: #fff !important; width: 100% !important; padding: 8px 0 !important; border-radius: 8px !important; }
+        #mk-timer-countdown { font-size: 11.5px !important; color: #94a3b8 !important; margin-top: 6px !important; font-weight: bold !important; }
+        #mk-filter-text { text-align: center !important; color: #10b981 !important; font-size: 11.5px !important; font-weight: bold !important; }
+        #mk-accuracy-wrapper { text-align: center !important; color: #e2e8f0 !important; font-size: 12.5px !important; font-weight: bold !important; }
+        #mk-accuracy-value { color: #06b6d4 !important; font-weight: 900 !important; text-shadow: 0 0 8px #06b6d4 !important; }
+        .mk-control-row { display: flex !important; justify-content: space-between !important; align-items: center !important; font-size: 12px !important; color: #94a3b8 !important; }
+        .mk-control-row select { background: #000 !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 7px !important; padding: 6px !important; width: 135px !important; outline: none !important; font-weight: bold !important; }
+        .mk-control-row input[type="color"] { border: none !important; background: transparent !important; width: 28px !important; height: 28px !important; cursor: pointer !important; }
+        .mk-theme-btn { background: #0f172a !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 7px !important; padding: 7px !important; font-size: 10px !important; cursor: pointer !important; text-align: center !important; font-weight: bold !important; }
+        .mk-theme-btn:hover { background: #00f0ff !important; color: #000 !important; border-color: #00f0ff !important; }
+        #mk-minimize-btn { width: 100% !important; background: transparent !important; border: 1px dashed #334155 !important; color: #94a3b8 !important; font-size: 11px !important; font-weight: bold !important; padding: 8px !important; border-radius: 7px !important; cursor: pointer !important; }
+        #mk-floating-mini-icon { position: fixed !important; top: 20% !important; left: 15px !important; padding: 12px 16px !important; background: #06090f !important; border: 2px solid #00f0ff !important; border-radius: 12px !important; color: #00f0ff !important; font-size: 12px !important; font-weight: bold !important; cursor: pointer !important; z-index: 2147483647 !important; display: none !important; box-shadow: 0 0 25px rgba(0,240,255,0.7) !important; touch-action: none !important; }
+        .mk-signal-up-active { background: linear-gradient(135deg, #00ff66, #00b347) !important; color: #000 !important; box-shadow: 0 0 30px #00ff66 !important; font-size: 25px !important; font-weight: 900 !important; }
+        .mk-signal-down-active { background: linear-gradient(135deg, #ff0055, #b3003b) !important; color: #fff !important; box-shadow: 0 0 30px #ff0055 !important; font-size: 25px !important; font-weight: 900 !important; }
+        .mk-signal-win-frame { background: rgba(0, 255, 102, 0.25) !important; color: #00ff66 !important; border: 2px dashed #00ff66 !important; font-size: 23px !important; font-weight: 900 !important; }
+        .mk-signal-loss-frame { background: rgba(255, 0, 85, 0.25) !important; color: #ff0055 !important; border: 2px dashed #ff0055 !important; font-size: 23px !important; font-weight: 900 !important; }
+    `;
+    document.head.appendChild(style);
 
-<div id="mk-master-panel">
-    <div id="mk-panel-header">
-        <span>🚀 𝗠.𝗞 𝗔𝗜 𝗦𝗜𝗚𝗡𝗔𝗟𝗦 𝗣𝗥𝗢 🚀</span>
-        <div style="display:flex; gap:6px; align-items:center;">
-            <span id="mk-toggle-themes-btn" style="cursor:pointer; font-size:10px; background:rgba(0,0,0,0.6); padding:3px 6px; border-radius:4px; font-weight:bold;">🎨 THEMES</span>
-            <span id="mk-close-btn" style="cursor:pointer; font-weight:bold; margin-left:4px; font-size:13px;">✕</span>
-        </div>
-    </div>
-    
-    <div id="mk-theme-drawer" style="display:none; background:rgba(3,7,18,0.98); padding:8px; border-bottom:1px solid #1e293b; max-height:140px; overflow-y:auto;">
-        <div id="mk-theme-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:5px;"></div>
-    </div>
-
-    <div id="mk-github-screen" class="mk-screen" style="display:block;">
-        <div class="mk-sec-title">🔒 SERVER APPROVAL REQUIRED</div>
-        <div class="mk-sec-subtitle">Aapka device registered nahi hai. M.K TRADER se online approval allow karwayein.</div>
-        <div style="font-size:10px; color:#94a3b8; text-align:center; font-weight:bold; margin-top:2px;">YOUR UNIQUE DEVICE ID:</div>
-        <div id="mk-dev-id-box" style="background:#000; color:#00f0ff; padding:8px; text-align:center; border-radius:6px; font-weight:bold; border:1px dashed #00f0ff; user-select:all; font-size:11px;"></div>
-        <button id="mk-check-github-btn" style="width:100%; padding:10px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:6px; cursor:pointer; font-size:11px;">VERIFY MY APPROVAL</button>
-        <a href="https://t.me/MK_TRADER586" target="_blank" class="mk-link-btn">📞 CONTACT M.K TRADER</a>
-    </div>
-
-    <div id="mk-auth-screen" class="mk-screen" style="display:none;">
-        <div class="mk-sec-title">🔑 ENTER PASS KEY</div>
-        <div class="mk-sec-subtitle">Device verified online. Enter master console key to unlock matching engine.</div>
-        <input type="text" id="mk-key-input" placeholder="ENTER ACCESS KEY..." autocomplete="off">
-        <button id="mk-unlock-btn" style="width:100%; padding:10px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:6px; cursor:pointer; font-size:11px;">UNLOCK SYSTEM</button>
-        <div id="mk-auth-error" style="color:#ef4444; font-size:11px; font-weight:bold; text-align:center; display:none;">INVALID CONSOLE ACCESS KEY!</div>
-    </div>
-    
-    <div id="mk-dashboard-screen" class="mk-screen" style="display:none;">
-        <div id="mk-radar-status">🛰️ AI RADAR - SYNCED LIVE</div>
-        
-        <div id="mk-signal-box">
-            <div id="mk-main-signal">WAITING...</div>
-            <div id="mk-timer-countdown">NEXT CANDLE IN: --s</div>
+    const mainPanel = document.createElement('div');
+    mainPanel.id = 'mk-master-panel';
+    mainPanel.innerHTML = `
+        <div id="mk-panel-header">
+            <span>🚀 𝗠.𝗞 𝗔𝗜 𝗦𝗜𝗚𝗡𝗔𝗟𝗦 𝗣𝗥𝗢 🚀</span>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <span id="mk-toggle-themes-btn" style="cursor:pointer; font-size:10.5px; background:rgba(0,0,0,0.6); padding:3px 7px; border-radius:5px; font-weight:bold;">🎨 30+ THEMES</span>
+                <span id="mk-close-btn" style="cursor:pointer; font-weight:bold; margin-left:4px; font-size:14px;">✕</span>
+            </div>
         </div>
         
-        <div id="mk-filter-text">FILTERING MARKET NOISE...</div>
-        <div id="mk-accuracy-wrapper">🎯 ACCURACY: <span id="mk-accuracy-value">99.7%</span></div>
+        <div id="mk-theme-drawer" style="display:none; background:rgba(3,7,18,0.98); padding:10px; border-bottom:1px solid #1e293b; max-height:160px; overflow-y:auto;">
+            <div id="mk-theme-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;"></div>
+        </div>
 
-        <div class="mk-control-row">
-            <label>⚙️ AI Mode:</label>
-            <select id="mk-logic-mode">
-                <option value="system" selected>System Mode (VIP)</option>
-                <option value="rapid">Continuous Scan</option>
-            </select>
+        <div id="mk-github-screen" class="mk-screen" style="display:block;">
+            <div class="mk-sec-title">🔒 SERVER APPROVAL REQUIRED</div>
+            <div class="mk-sec-subtitle">Aapka device registered nahi hai. M.K TRADER se online approval allow karwayein.</div>
+            <div style="font-size:10.5px; color:#94a3b8; text-align:center; font-weight:bold; margin-top:4px;">YOUR UNIQUE DEVICE ID:</div>
+            <div id="mk-dev-id-box" style="background:#000; color:#00f0ff; padding:10px; text-align:center; border-radius:7px; font-weight:bold; border:1px dashed #00f0ff; user-select:all; font-size:12px;"></div>
+            <button id="mk-check-github-btn" style="width:100%; padding:12px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:7px; cursor:pointer; margin-top:4px; font-size:12px;">VERIFY MY APPROVAL</button>
+            <a href="https://t.me/MK_TRADER586" target="_blank" class="mk-link-btn">📞 CONTACT M.K TRADER</a>
+        </div>
+
+        <div id="mk-auth-screen" class="mk-screen" style="display:none;">
+            <div class="mk-sec-title">🔑 ENTER PASS KEY</div>
+            <div class="mk-sec-subtitle">Device verified online. Enter master console key to unlock matching engine.</div>
+            <input type="text" id="mk-key-input" placeholder="ENTER ACCESS KEY..." autocomplete="off">
+            <button id="mk-unlock-btn" style="width:100%; padding:12px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:7px; cursor:pointer; font-size:12px;">UNLOCK SYSTEM</button>
+            <div id="mk-auth-error" style="color:#ef4444; font-size:11.5px; font-weight:bold; text-align:center; display:none;">INVALID CONSOLE ACCESS KEY!</div>
         </div>
         
-        <div class="mk-control-row">
-            <label>⏱️ Expiry Time:</label>
-            <select id="mk-time-dropdown">
-                <option value="5">5 Second</option>
-                <option value="10">10 Second</option>
-                <option value="15">15 Second</option>
-                <option value="30">30 Second</option>
-                <option value="60" selected>1 Minute</option>
-                <option value="300">5 Minute</option>
-            </select>
-        </div>
+        <div id="mk-dashboard-screen" class="mk-screen" style="display:none;">
+            <div id="mk-radar-status">🛰️ AI RADAR - SYNCED LIVE</div>
+            
+            <div id="mk-signal-box">
+                <div id="mk-main-signal">WAITING...</div>
+                <div id="mk-timer-countdown">NEXT CANDLE IN: --s</div>
+            </div>
+            
+            <div id="mk-filter-text">FILTERING MARKET NOISE...</div>
+            <div id="mk-accuracy-wrapper">🎯 ACCURACY: <span id="mk-accuracy-value">99.7%</span></div>
 
-        <div class="mk-control-row">
-            <label>🎨 Laser Neon:</label>
-            <input type="color" id="mk-laser-picker" value="#00f0ff">
-        </div>
-        
-        <button id="mk-minimize-btn">🗕 MINIMIZE TERMINAL</button>
-    </div>
-</div>
+            <div class="mk-control-row">
+                <label>⚙️ AI Mode:</label>
+                <select id="mk-logic-mode">
+                    <option value="system" selected>System Mode (VIP)</option>
+                    <option value="rapid">Continuous Scan</option>
+                </select>
+            </div>
+            
+            <div class="mk-control-row">
+                <label>⏱️ Expiry Time:</label>
+                <select id="mk-time-dropdown">
+                    <option value="5">5 Second</option>
+                    <option value="10">10 Second</option>
+                    <option value="15">15 Second</option>
+                    <option value="30">30 Second</option>
+                    <option value="60" selected>1 Minute</option>
+                    <option value="300">5 Minute</option>
+                </select>
+            </div>
 
-<script>
+            <div class="mk-control-row">
+                <label>🎨 Laser Neon:</label>
+                <input type="color" id="mk-laser-picker" value="#00f0ff">
+            </div>
+            
+            <button id="mk-minimize-btn">🗕 MINIMIZE TERMINAL</button>
+        </div>
+    `;
+    document.body.appendChild(mainPanel);
+
+    const miniIcon = document.createElement('div');
+    miniIcon.id = 'mk-floating-mini-icon';
+    miniIcon.innerHTML = `<span>🚀 M.K PRO</span>`;
+    document.body.appendChild(miniIcon);
+
     const MASTER_KEY = "MK586";
     const GITHUB_DATABASE_URL = "https://raw.githubusercontent.com/mkhacker586-lab/mk-database/main/allowed.json";
     const TELEGRAM_BOT_TOKEN = "8709739986:AAFmN9R8yQp3pYvNz6ZqJmK4sX8uYt9r9b0";
@@ -206,18 +208,16 @@ HTML_PAGE = """
         { name: "⚡ Neon Spark", border: "#f43f5e", bg: "#0f0205", header: "linear-gradient(90deg, #f43f5e, #fbbf24)" }
     ];
 
-    const mainPanel = document.getElementById('mk-master-panel');
     const themeGrid = document.getElementById('mk-theme-grid');
-
     THEMES.forEach((t) => {
         const btn = document.createElement('button');
         btn.className = 'mk-theme-btn';
         btn.innerText = t.name;
         btn.addEventListener('click', () => {
-            mainPanel.style.background = t.bg + " !important";
-            mainPanel.style.border = "3px solid " + t.border + " !important";
-            mainPanel.style.boxShadow = "0 0 35px " + t.border + "80 !important";
+            mainPanel.style.cssText = `position: fixed !important; top: 10% !important; left: 15px !important; width: 320px !important; max-height: 85vh !important; background: ${t.bg} !important; border: 3px solid ${t.border} !important; box-shadow: 0 0 35px ${t.border}80 !important; border-radius: 18px !important; z-index: 2147483647 !important; overflow-y: auto !important;`;
             document.getElementById('mk-panel-header').style.background = t.header;
+            miniIcon.style.borderColor = t.border;
+            miniIcon.style.color = t.border;
             document.getElementById('mk-laser-picker').value = t.border;
         });
         themeGrid.appendChild(btn);
@@ -228,27 +228,42 @@ HTML_PAGE = """
         td.style.display = td.style.display === 'none' ? 'block' : 'none';
     });
 
-    document.getElementById('mk-close-btn').addEventListener('click', () => { 
-        if(window.parent !== window) {
-            window.parent.postMessage('close_mk_panel', '*');
-        } else {
-            mainPanel.remove();
-        }
-    });
+    // Smooth Dragging System
+    let offsetX = 0, offsetY = 0, startTouchX = 0, startTouchY = 0, isDragging = false;
+    const header = document.getElementById('mk-panel-header');
+    
+    header.addEventListener('touchstart', (e) => {
+        if(e.touches.length > 1) return;
+        isDragging = true;
+        startTouchX = e.touches[0].clientX - offsetX;
+        startTouchY = e.touches[0].clientY - offsetY;
+    }, {passive: true});
+    
+    window.addEventListener('touchend', () => { isDragging = false; });
+    
+    window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        offsetX = e.touches[0].clientX - startTouchX;
+        offsetY = e.touches[0].clientY - startTouchY;
+        requestAnimationFrame(() => { mainPanel.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`; });
+    }, {passive: true});
 
+    document.getElementById('mk-close-btn').addEventListener('click', () => { 
+        mainPanel.remove(); miniIcon.remove(); style.remove();
+    });
+    
     document.getElementById('mk-minimize-btn').addEventListener('click', () => { 
-        if(mainPanel.style.height === '45px') {
-            mainPanel.style.height = '480px';
-            document.getElementById('mk-minimize-btn').innerText = '🗕 MINIMIZE TERMINAL';
-        } else {
-            mainPanel.style.height = '45px';
-            document.getElementById('mk-minimize-btn').innerText = '🗖 MAXIMIZE';
-        }
+        mainPanel.style.display = 'none'; 
+        miniIcon.style.display = 'block'; 
+    });
+    
+    miniIcon.addEventListener('click', () => { 
+        miniIcon.style.display = 'none'; 
+        mainPanel.style.display = 'block'; 
     });
 
     document.getElementById('mk-check-github-btn').addEventListener('click', function() {
-        sendAlert(`🔔 *New Device Verification Attempt!*\n📱 Device ID: \`${DEVICE_ID}\`\n🌐 Browser: \`${navigator.userAgent}\``);
-        
+        sendAlert(`🔔 *New Device Verification Attempt!*\n📱 Device ID: \`${DEVICE_ID}\``);
         fetch(GITHUB_DATABASE_URL)
         .then(res => res.json())
         .then(allowedDevices => {
@@ -259,12 +274,10 @@ HTML_PAGE = """
                 sendAlert(`✅ *Device Approved Successfully!*\nDevice ID: \`${DEVICE_ID}\``);
             } else {
                 alert(`❌ ACCESS DENIED:\nAapka Device ID verify nahi hua.\\n\\nID: ${DEVICE_ID}`);
-                sendAlert(`❌ *Access Denied / Unregistered Device!*\nDevice ID: \`${DEVICE_ID}\``);
+                sendAlert(`❌ *Access Denied!*\nDevice ID: \`${DEVICE_ID}\``);
             }
         })
-        .catch(err => {
-            alert("⚠️ Connection Error: GitHub Link check karein.");
-        });
+        .catch(err => { alert("⚠️ Connection Error!"); });
     });
 
     document.getElementById('mk-unlock-btn').addEventListener('click', () => {
@@ -273,7 +286,7 @@ HTML_PAGE = """
             localStorage.setItem('mk_gate2_session', 'passed');
             document.getElementById('mk-auth-screen').style.display = 'none';
             document.getElementById('mk-dashboard-screen').style.display = 'block';
-            sendAlert(`🔓 *Console Unlocked Successfully!*\nDevice ID: \`${DEVICE_ID}\``);
+            sendAlert(`🔓 *Console Unlocked!*\nDevice ID: \`${DEVICE_ID}\``);
             runRadarEngine();
         } else {
             const errBox = document.getElementById('mk-auth-error');
@@ -347,7 +360,7 @@ HTML_PAGE = """
                             displaySignal.innerText = "❌ LOSS";
                             displaySignal.className = "mk-signal-loss-frame";
                             filterStatus.innerText = "MARTINGALE RECOMMENDED ❌";
-                            statusHeader.innerText = "🔴 TRADE RESULT: LOSS";
+                            statusHeader.innerText = "🟢 TRADE RESULT: LOSS";
                             statusHeader.style.color = "#ff0055";
                         }
                         setTimeout(() => {
@@ -383,14 +396,12 @@ HTML_PAGE = """
     } else {
         document.getElementById('mk-github-screen').style.display = 'block';
     }
-</script>
-</body>
-</html>
+})();
 """
 
 @app.route('/')
 def home():
-    return render_template_string(HTML_PAGE)
+    return JS_PAYLOAD, 200, {'Content-Type': 'application/javascript'}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

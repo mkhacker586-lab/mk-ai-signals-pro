@@ -30,7 +30,7 @@ JS_PAYLOAD = """
     style.id = 'mk-injected-style';
     style.innerHTML = `
         #mk-master-panel {
-            position: fixed !important; top: 10% !important; left: 20px !important; width: 315px !important; height: auto !important; max-height: 480px !important;
+            position: fixed !important; top: 10% !important; left: 20px !important; width: 315px !important; height: auto !important; min-height: 250px !important; max-height: 480px !important;
             background: #06090f !important; border-radius: 16px !important;
             z-index: 2147483647 !important; color: #fff !important; font-family: sans-serif !important;
             box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow-y: auto !important; overflow-x: hidden !important;

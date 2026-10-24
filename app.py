@@ -30,44 +30,45 @@ JS_PAYLOAD = """
     style.id = 'mk-injected-style';
     style.innerHTML = `
         #mk-master-panel {
-            position: fixed !important; top: 10% !important; left: 20px !important; width: 315px !important; height: auto !important;
+            position: fixed !important; top: 10% !important; left: 20px !important; width: 315px !important; height: auto !important; max-height: 480px !important;
             background: #06090f !important; border-radius: 16px !important;
             z-index: 2147483647 !important; color: #fff !important; font-family: sans-serif !important;
-            box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow: hidden !important;
+            box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow-y: auto !important; overflow-x: hidden !important;
             box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important; touch-action: none !important;
             resize: both !important;
         }
+        #mk-master-panel::-webkit-scrollbar { width: 3px; }
+        #mk-master-panel::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
+        
         #mk-panel-header {
             background: linear-gradient(90deg, #ff0055, #7000ff, #00f0ff) !important;
-            padding: 12px 14px !important; font-weight: bold !important; font-size: 13px !important;
+            padding: 10px 12px !important; font-weight: bold !important; font-size: 12px !important;
             text-align: center !important; cursor: move !important; display: flex !important; justify-content: space-between !important; align-items: center !important;
-            user-select: none !important;
+            user-select: none !important; position: sticky !important; top: 0 !important; z-index: 10 !important;
         }
-        .mk-screen { padding: 16px !important; box-sizing: border-box !important; display: flex !important; flex-direction: column !important; gap: 12px !important; width: 100% !important; max-height: 420px !important; overflow-y: auto !important; }
-        .mk-screen::-webkit-scrollbar { width: 4px; }
-        .mk-screen::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 4px; }
-        .mk-sec-title { font-size: 14px !important; font-weight: bold !important; color: #ff0055 !important; text-align: center !important; text-shadow: 0 0 8px rgba(255,0,85,0.7) !important; }
-        .mk-sec-subtitle { font-size: 11px !important; color: #94a3b8 !important; text-align: center !important; line-height: 1.4 !important; }
-        #mk-key-input { width: 100% !important; padding: 11px !important; background: #000 !important; border: 2px solid #1e293b !important; border-radius: 8px !important; color: #fff !important; text-align: center !important; font-weight: bold !important; outline: none !important; box-sizing: border-box !important; font-size: 13px !important; }
-        .mk-link-btn { width: 100% !important; padding: 11px !important; background: #1e1b4b !important; color: #a855f7 !important; border: 1px solid #4c1d95 !important; font-weight: bold !important; border-radius: 8px !important; text-align: center !important; text-decoration: none !important; display: block !important; box-sizing: border-box !important; font-size: 11.5px !important; }
-        #mk-radar-status { text-align: center !important; color: #eab308 !important; font-size: 11.5px !important; font-weight: bold !important; }
-        #mk-signal-box { background: #0f172a !important; padding: 16px !important; border-radius: 12px !important; text-align: center !important; border: 1px solid #1e293b !important; box-sizing: border-box !important; min-height: 85px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
-        #mk-main-signal { font-size: 22px !important; font-weight: 900 !important; color: #fff !important; width: 100% !important; padding: 8px 0 !important; border-radius: 8px !important; }
-        #mk-timer-countdown { font-size: 11.5px !important; color: #94a3b8 !important; margin-top: 6px !important; font-weight: bold !important; }
-        #mk-filter-text { text-align: center !important; color: #10b981 !important; font-size: 11.5px !important; font-weight: bold !important; }
-        #mk-accuracy-wrapper { text-align: center !important; color: #e2e8f0 !important; font-size: 12.5px !important; font-weight: bold !important; }
+        .mk-screen { padding: 14px !important; box-sizing: border-box !important; display: none !important; flex-direction: column !important; gap: 10px !important; width: 100% !important; }
+        .mk-sec-title { font-size: 13px !important; font-weight: bold !important; color: #ff0055 !important; text-align: center !important; text-shadow: 0 0 8px rgba(255,0,85,0.7) !important; }
+        .mk-sec-subtitle { font-size: 10.5px !important; color: #94a3b8 !important; text-align: center !important; line-height: 1.3 !important; }
+        #mk-key-input { width: 100% !important; padding: 10px !important; background: #000 !important; border: 2px solid #1e293b !important; border-radius: 6px !important; color: #fff !important; text-align: center !important; font-weight: bold !important; outline: none !important; box-sizing: border-box !important; font-size: 12px !important; }
+        .mk-link-btn { width: 100% !important; padding: 10px !important; background: #1e1b4b !important; color: #a855f7 !important; border: 1px solid #4c1d95 !important; font-weight: bold !important; border-radius: 6px !important; text-align: center !important; text-decoration: none !important; display: block !important; box-sizing: border-box !important; font-size: 11px !important; }
+        #mk-radar-status { text-align: center !important; color: #eab308 !important; font-size: 11px !important; font-weight: bold !important; }
+        #mk-signal-box { background: #0f172a !important; padding: 14px !important; border-radius: 10px !important; text-align: center !important; border: 1px solid #1e293b !important; box-sizing: border-box !important; min-height: 75px !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+        #mk-main-signal { font-size: 20px !important; font-weight: 900 !important; color: #fff !important; width: 100% !important; padding: 6px 0 !important; border-radius: 6px !important; }
+        #mk-timer-countdown { font-size: 11px !important; color: #94a3b8 !important; margin-top: 5px !important; font-weight: bold !important; }
+        #mk-filter-text { text-align: center !important; color: #10b981 !important; font-size: 11px !important; font-weight: bold !important; }
+        #mk-accuracy-wrapper { text-align: center !important; color: #e2e8f0 !important; font-size: 11.5px !important; font-weight: bold !important; }
         #mk-accuracy-value { color: #06b6d4 !important; font-weight: 900 !important; text-shadow: 0 0 8px #06b6d4 !important; }
-        .mk-control-row { display: flex !important; justify-content: space-between !important; align-items: center !important; font-size: 12px !important; color: #94a3b8 !important; }
-        .mk-control-row select { background: #000 !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 7px !important; padding: 6px !important; width: 135px !important; outline: none !important; font-weight: bold !important; }
-        .mk-control-row input[type="color"] { border: none !important; background: transparent !important; width: 28px !important; height: 28px !important; cursor: pointer !important; }
-        .mk-theme-btn { background: #0f172a !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 7px !important; padding: 7px !important; font-size: 10px !important; cursor: pointer !important; text-align: center !important; font-weight: bold !important; }
+        .mk-control-row { display: flex !important; justify-content: space-between !important; align-items: center !important; font-size: 11px !important; color: #94a3b8 !important; }
+        .mk-control-row select { background: #000 !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 6px !important; padding: 5px !important; width: 125px !important; outline: none !important; font-weight: bold !important; }
+        .mk-control-row input[type="color"] { border: none !important; background: transparent !important; width: 24px !important; height: 24px !important; cursor: pointer !important; }
+        .mk-theme-btn { background: #0f172a !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 6px !important; padding: 6px !important; font-size: 9.5px !important; cursor: pointer !important; text-align: center !important; font-weight: bold !important; }
         .mk-theme-btn:hover { background: #00f0ff !important; color: #000 !important; border-color: #00f0ff !important; }
-        #mk-minimize-btn { width: 100% !important; background: transparent !important; border: 1px dashed #334155 !important; color: #94a3b8 !important; font-size: 11px !important; font-weight: bold !important; padding: 8px !important; border-radius: 7px !important; cursor: pointer !important; }
-        #mk-floating-mini-icon { position: fixed !important; top: 20% !important; left: 15px !important; padding: 12px 16px !important; background: #06090f !important; border: 2px solid #00f0ff !important; border-radius: 12px !important; color: #00f0ff !important; font-size: 12px !important; font-weight: bold !important; cursor: pointer !important; z-index: 2147483647 !important; display: none !important; box-shadow: 0 0 25px rgba(0,240,255,0.7) !important; touch-action: none !important; }
-        .mk-signal-up-active { background: linear-gradient(135deg, #00ff66, #00b347) !important; color: #000 !important; box-shadow: 0 0 30px #00ff66 !important; font-size: 25px !important; font-weight: 900 !important; }
-        .mk-signal-down-active { background: linear-gradient(135deg, #ff0055, #b3003b) !important; color: #fff !important; box-shadow: 0 0 30px #ff0055 !important; font-size: 25px !important; font-weight: 900 !important; }
-        .mk-signal-win-frame { background: rgba(0, 255, 102, 0.25) !important; color: #00ff66 !important; border: 2px dashed #00ff66 !important; font-size: 23px !important; font-weight: 900 !important; }
-        .mk-signal-loss-frame { background: rgba(255, 0, 85, 0.25) !important; color: #ff0055 !important; border: 2px dashed #ff0055 !important; font-size: 23px !important; font-weight: 900 !important; }
+        #mk-minimize-btn { width: 100% !important; background: transparent !important; border: 1px dashed #334155 !important; color: #94a3b8 !important; font-size: 10px !important; font-weight: bold !important; padding: 7px !important; border-radius: 6px !important; cursor: pointer !important; }
+        #mk-floating-mini-icon { position: fixed !important; top: 20% !important; left: 15px !important; padding: 10px 14px !important; background: #06090f !important; border: 2px solid #00f0ff !important; border-radius: 10px !important; color: #00f0ff !important; font-size: 11px !important; font-weight: bold !important; cursor: pointer !important; z-index: 2147483647 !important; display: none !important; box-shadow: 0 0 25px rgba(0,240,255,0.7) !important; touch-action: none !important; }
+        .mk-signal-up-active { background: linear-gradient(135deg, #00ff66, #00b347) !important; color: #000 !important; box-shadow: 0 0 25px #00ff66 !important; font-size: 22px !important; font-weight: 900 !important; }
+        .mk-signal-down-active { background: linear-gradient(135deg, #ff0055, #b3003b) !important; color: #fff !important; box-shadow: 0 0 25px #ff0055 !important; font-size: 22px !important; font-weight: 900 !important; }
+        .mk-signal-win-frame { background: rgba(0, 255, 102, 0.25) !important; color: #00ff66 !important; border: 2px dashed #00ff66 !important; font-size: 20px !important; font-weight: 900 !important; }
+        .mk-signal-loss-frame { background: rgba(255, 0, 85, 0.25) !important; color: #ff0055 !important; border: 2px dashed #ff0055 !important; font-size: 20px !important; font-weight: 900 !important; }
     `;
     document.head.appendChild(style);
 
@@ -76,34 +77,34 @@ JS_PAYLOAD = """
     mainPanel.innerHTML = `
         <div id="mk-panel-header">
             <span>🚀 𝗠.𝗞 𝗔𝗜 𝗦𝗜𝗚𝗡𝗔𝗟𝗦 𝗣𝗥𝗢 🚀</span>
-            <div style="display:flex; gap:8px; align-items:center;">
-                <span id="mk-toggle-themes-btn" style="cursor:pointer; font-size:10.5px; background:rgba(0,0,0,0.6); padding:3px 7px; border-radius:5px; font-weight:bold;">🎨 30+ THEMES</span>
-                <span id="mk-close-btn" style="cursor:pointer; font-weight:bold; margin-left:4px; font-size:14px;">✕</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+                <span id="mk-toggle-themes-btn" style="cursor:pointer; font-size:10px; background:rgba(0,0,0,0.6); padding:3px 6px; border-radius:4px; font-weight:bold;">🎨 THEMES</span>
+                <span id="mk-close-btn" style="cursor:pointer; font-weight:bold; margin-left:4px; font-size:13px;">✕</span>
             </div>
         </div>
         
-        <div id="mk-theme-drawer" style="display:none; background:rgba(3,7,18,0.98); padding:10px; border-bottom:1px solid #1e293b; max-height:150px; overflow-y:auto;">
-            <div id="mk-theme-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:6px;"></div>
+        <div id="mk-theme-drawer" style="display:none; background:rgba(3,7,18,0.98); padding:8px; border-bottom:1px solid #1e293b; max-height:130px; overflow-y:auto;">
+            <div id="mk-theme-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:5px;"></div>
         </div>
 
-        <div id="mk-github-screen" class="mk-screen" style="display:flex;">
+        <div id="mk-github-screen" class="mk-screen">
             <div class="mk-sec-title">🔒 SERVER APPROVAL REQUIRED</div>
             <div class="mk-sec-subtitle">Aapka device registered nahi hai. M.K TRADER se online approval allow karwayein.</div>
-            <div style="font-size:10.5px; color:#94a3b8; text-align:center; font-weight:bold; margin-top:4px;">YOUR UNIQUE DEVICE ID:</div>
-            <div id="mk-dev-id-box" style="background:#000; color:#00f0ff; padding:10px; text-align:center; border-radius:7px; font-weight:bold; border:1px dashed #00f0ff; user-select:all; font-size:12px;"></div>
-            <button id="mk-check-github-btn" style="width:100%; padding:12px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:7px; cursor:pointer; margin-top:4px; font-size:12px;">VERIFY MY APPROVAL</button>
+            <div style="font-size:10px; color:#94a3b8; text-align:center; font-weight:bold; margin-top:2px;">YOUR UNIQUE DEVICE ID:</div>
+            <div id="mk-dev-id-box" style="background:#000; color:#00f0ff; padding:8px; text-align:center; border-radius:6px; font-weight:bold; border:1px dashed #00f0ff; user-select:all; font-size:11px;"></div>
+            <button id="mk-check-github-btn" style="width:100%; padding:10px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:6px; cursor:pointer; font-size:11px;">VERIFY MY APPROVAL</button>
             <a href="https://t.me/MK_TRADER586" target="_blank" class="mk-link-btn">📞 CONTACT M.K TRADER</a>
         </div>
 
-        <div id="mk-auth-screen" class="mk-screen" style="display:none;">
+        <div id="mk-auth-screen" class="mk-screen">
             <div class="mk-sec-title">🔑 ENTER PASS KEY</div>
             <div class="mk-sec-subtitle">Device verified online. Enter master console key to unlock matching engine.</div>
             <input type="text" id="mk-key-input" placeholder="ENTER ACCESS KEY..." autocomplete="off">
-            <button id="mk-unlock-btn" style="width:100%; padding:12px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:7px; cursor:pointer; font-size:12px;">UNLOCK SYSTEM</button>
-            <div id="mk-auth-error" style="color:#ef4444; font-size:11.5px; font-weight:bold; text-align:center; display:none;">INVALID CONSOLE ACCESS KEY!</div>
+            <button id="mk-unlock-btn" style="width:100%; padding:10px; background:#00f0ff; color:#000; border:none; font-weight:bold; border-radius:6px; cursor:pointer; font-size:11px;">UNLOCK SYSTEM</button>
+            <div id="mk-auth-error" style="color:#ef4444; font-size:11px; font-weight:bold; text-align:center; display:none;">INVALID CONSOLE ACCESS KEY!</div>
         </div>
         
-        <div id="mk-dashboard-screen" class="mk-screen" style="display:none;">
+        <div id="mk-dashboard-screen" class="mk-screen">
             <div id="mk-radar-status">🛰️ AI RADAR - SYNCED LIVE</div>
             
             <div id="mk-signal-box">

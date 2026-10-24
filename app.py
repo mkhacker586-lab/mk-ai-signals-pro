@@ -35,7 +35,6 @@ JS_PAYLOAD = """
             z-index: 2147483647 !important; color: #fff !important; font-family: sans-serif !important;
             box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow-y: auto !important; overflow-x: hidden !important;
             box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important; touch-action: none !important;
-            resize: both !important;
         }
         #mk-master-panel::-webkit-scrollbar { width: 3px; }
         #mk-master-panel::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
@@ -275,7 +274,7 @@ JS_PAYLOAD = """
                 document.getElementById('mk-auth-screen').style.display = 'flex';
                 sendAlert(`✅ *Device Approved Successfully!*\nDevice ID: \`${DEVICE_ID}\``);
             } else {
-                alert(`❌ ACCESS DENIED:\\nAapka Device ID verify nahi hua.\\n\\nID: ${DEVICE_ID}`);
+                alert(`❌ ACCESS DENIED:\nAapka Device ID verify nahi hua.\\n\\nID: ${DEVICE_ID}`);
                 sendAlert(`❌ *Access Denied!*\nDevice ID: \`${DEVICE_ID}\``);
             }
         })

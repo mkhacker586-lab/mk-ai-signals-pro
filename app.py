@@ -35,6 +35,7 @@ JS_PAYLOAD = """
             z-index: 2147483647 !important; color: #fff !important; font-family: sans-serif !important;
             box-sizing: border-box !important; border: 3px solid #00f0ff !important; overflow-y: auto !important; overflow-x: hidden !important;
             box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important; touch-action: none !important;
+            resize: both !important;
         }
         #mk-master-panel::-webkit-scrollbar { width: 3px; }
         #mk-master-panel::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
@@ -253,31 +254,9 @@ JS_PAYLOAD = """
         mainPanel.remove(); miniIcon.remove(); style.remove();
     });
     
-    let isMinimized = false;
     document.getElementById('mk-minimize-btn').addEventListener('click', () => { 
-        const screens = [document.getElementById('mk-github-screen'), document.getElementById('mk-auth-screen'), document.getElementById('mk-dashboard-screen')];
-        if(!isMinimized) {
-            screens.forEach(s => s.style.display = 'none');
-            document.getElementById('mk-theme-drawer').style.display = 'none';
-            mainPanel.style.maxHeight = '45px';
-            document.getElementById('mk-minimize-btn').innerText = '🗖 MAXIMIZE';
-            isMinimized = true;
-        } else {
-            mainPanel.style.maxHeight = '480px';
-            const gate1 = localStorage.getItem('mk_gate1_approved');
-            const gate2 = localStorage.getItem('mk_gate2_session');
-            if(gate1 === 'true') {
-                if(gate2 === 'passed') {
-                    document.getElementById('mk-dashboard-screen').style.display = 'flex';
-                } else {
-                    document.getElementById('mk-auth-screen').style.display = 'flex';
-                }
-            } else {
-                document.getElementById('mk-github-screen').style.display = 'flex';
-            }
-            document.getElementById('mk-minimize-btn').innerText = '🗕 MINIMIZE TERMINAL';
-            isMinimized = false;
-        }
+        mainPanel.style.display = 'none'; 
+        miniIcon.style.display = 'block'; 
     });
     
     miniIcon.addEventListener('click', () => { 

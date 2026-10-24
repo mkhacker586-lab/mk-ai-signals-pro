@@ -253,9 +253,31 @@ JS_PAYLOAD = """
         mainPanel.remove(); miniIcon.remove(); style.remove();
     });
     
+    let isMinimized = false;
     document.getElementById('mk-minimize-btn').addEventListener('click', () => { 
-        mainPanel.style.display = 'none'; 
-        miniIcon.style.display = 'block'; 
+        const screens = [document.getElementById('mk-github-screen'), document.getElementById('mk-auth-screen'), document.getElementById('mk-dashboard-screen')];
+        if(!isMinimized) {
+            screens.forEach(s => s.style.display = 'none');
+            document.getElementById('mk-theme-drawer').style.display = 'none';
+            mainPanel.style.maxHeight = '45px';
+            document.getElementById('mk-minimize-btn').innerText = '🗖 MAXIMIZE';
+            isMinimized = true;
+        } else {
+            mainPanel.style.maxHeight = '480px';
+            const gate1 = localStorage.getItem('mk_gate1_approved');
+            const gate2 = localStorage.getItem('mk_gate2_session');
+            if(gate1 === 'true') {
+                if(gate2 === 'passed') {
+                    document.getElementById('mk-dashboard-screen').style.display = 'flex';
+                } else {
+                    document.getElementById('mk-auth-screen').style.display = 'flex';
+                }
+            } else {
+                document.getElementById('mk-github-screen').style.display = 'flex';
+            }
+            document.getElementById('mk-minimize-btn').innerText = '🗕 MINIMIZE TERMINAL';
+            isMinimized = false;
+        }
     });
     
     miniIcon.addEventListener('click', () => { 
@@ -274,7 +296,7 @@ JS_PAYLOAD = """
                 document.getElementById('mk-auth-screen').style.display = 'flex';
                 sendAlert(`✅ *Device Approved Successfully!*\nDevice ID: \`${DEVICE_ID}\``);
             } else {
-                alert(`❌ ACCESS DENIED:\nAapka Device ID verify nahi hua.\\n\\nID: ${DEVICE_ID}`);
+                alert(`❌ ACCESS DENIED:\\nAapka Device ID verify nahi hua.\\n\\nID: ${DEVICE_ID}`);
                 sendAlert(`❌ *Access Denied!*\nDevice ID: \`${DEVICE_ID}\``);
             }
         })

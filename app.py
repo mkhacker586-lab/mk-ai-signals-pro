@@ -33,24 +33,36 @@ JS_PAYLOAD = """
     shadow.innerHTML = `
         <style>
             #mk-master-panel {
-                width: 315px !important; min-height: 290px !important; max-height: 480px !important;
+                width: 315px !important; min-height: 340px !important; max-height: 460px !important;
                 background: #06090f !important; border-radius: 16px !important;
                 color: #fff !important; font-family: sans-serif !important;
                 box-sizing: border-box !important; border: 3px solid #00f0ff !important;
-                overflow-y: auto !important; overflow-x: hidden !important;
+                overflow: hidden !important; position: relative !important;
                 box-shadow: 0 0 35px rgba(0, 240, 255, 0.7) !important;
             }
-            #mk-master-panel::-webkit-scrollbar { width: 3px; }
-            #mk-master-panel::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
-            
             #mk-panel-header {
                 background: linear-gradient(90deg, #ff0055, #7000ff, #00f0ff) !important;
                 padding: 10px 12px !important; font-weight: bold !important; font-size: 12px !important;
                 text-align: center !important; cursor: move !important; display: flex !important;
                 justify-content: space-between !important; align-items: center !important;
-                user-select: none !important; position: sticky !important; top: 0 !important; z-index: 10 !important;
+                user-select: none !important; position: relative !important; z-index: 50 !important;
             }
-            .mk-screen { padding: 14px !important; box-sizing: border-box !important; display: none !important; width: 100% !important; }
+            #mk-theme-drawer {
+                position: absolute !important; top: 41px !important; left: 0 !important; width: 100% !important;
+                background: rgba(6, 9, 15, 0.98) !important; padding: 10px !important; box-sizing: border-box !important;
+                display: none !important; max-height: 380px !important; overflow-y: auto !important; z-index: 200 !important;
+                border-bottom: 2px solid #00f0ff !important;
+            }
+            #mk-theme-drawer::-webkit-scrollbar { width: 3px; }
+            #mk-theme-drawer::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
+
+            .mk-screen {
+                padding: 14px !important; box-sizing: border-box !important; display: none !important;
+                width: 100% !important; height: calc(460px - 41px) !important; overflow-y: auto !important;
+            }
+            .mk-screen::-webkit-scrollbar { width: 3px; }
+            .mk-screen::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 3px; }
+
             .mk-sec-title { font-size: 13px !important; font-weight: bold !important; color: #ff0055 !important; text-align: center !important; text-shadow: 0 0 8px rgba(255,0,85,0.7) !important; margin-bottom: 8px !important; }
             .mk-sec-subtitle { font-size: 10.5px !important; color: #94a3b8 !important; text-align: center !important; line-height: 1.3 !important; margin-bottom: 10px !important; }
             #mk-key-input { width: 100% !important; padding: 10px !important; background: #000 !important; border: 2px solid #1e293b !important; border-radius: 6px !important; color: #fff !important; text-align: center !important; font-weight: bold !important; outline: none !important; box-sizing: border-box !important; font-size: 12px !important; margin-bottom: 10px !important; }
@@ -67,7 +79,7 @@ JS_PAYLOAD = """
             .mk-control-row input[type="color"] { border: none !important; background: transparent !important; width: 24px !important; height: 24px !important; cursor: pointer !important; }
             .mk-theme-btn { background: #0f172a !important; color: #fff !important; border: 1px solid #334155 !important; border-radius: 6px !important; padding: 6px !important; font-size: 9.5px !important; cursor: pointer !important; text-align: center !important; font-weight: bold !important; }
             .mk-theme-btn:hover { background: #00f0ff !important; color: #000 !important; border-color: #00f0ff !important; }
-            #mk-minimize-btn { width: 100% !important; background: transparent !important; border: 1px dashed #334155 !important; color: #94a3b8 !important; font-size: 10px !important; font-weight: bold !important; padding: 7px !important; border-radius: 6px !important; cursor: pointer !important; margin-top: 5px !important; }
+            #mk-minimize-btn { width: 100% !important; background: transparent !important; border: 1px dashed #334155 !important; color: #94a3b8 !important; font-size: 10px !important; font-weight: bold !important; padding: 7px !important; border-radius: 6px !important; cursor: pointer !important; margin-top: 5px !important; margin-bottom: 15px !important; }
             #mk-floating-mini-icon { position: fixed !important; top: 20% !important; left: 15px !important; padding: 10px 14px !important; background: #06090f !important; border: 2px solid #00f0ff !important; border-radius: 10px !important; color: #00f0ff !important; font-size: 11px !important; font-weight: bold !important; cursor: pointer !important; z-index: 2147483647 !important; display: none !important; box-shadow: 0 0 25px rgba(0,240,255,0.7) !important; }
             .mk-signal-up-active { background: linear-gradient(135deg, #00ff66, #00b347) !important; color: #000 !important; box-shadow: 0 0 25px #00ff66 !important; font-size: 22px !important; font-weight: 900 !important; }
             .mk-signal-down-active { background: linear-gradient(135deg, #ff0055, #b3003b) !important; color: #fff !important; box-shadow: 0 0 25px #ff0055 !important; font-size: 22px !important; font-weight: 900 !important; }
@@ -84,7 +96,7 @@ JS_PAYLOAD = """
                 </div>
             </div>
             
-            <div id="mk-theme-drawer" style="display:none; background:rgba(3,7,18,0.98); padding:8px; border-bottom:1px solid #1e293b; max-height:130px; overflow-y:auto;">
+            <div id="mk-theme-drawer">
                 <div id="mk-theme-grid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:5px;"></div>
             </div>
 
@@ -223,6 +235,7 @@ JS_PAYLOAD = """
             miniIcon.style.borderColor = t.border;
             miniIcon.style.color = t.border;
             shadow.getElementById('mk-laser-picker').value = t.border;
+            shadow.getElementById('mk-theme-drawer').style.display = 'none';
         });
         themeGrid.appendChild(btn);
     });
